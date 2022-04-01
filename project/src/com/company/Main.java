@@ -127,6 +127,8 @@ public class Main {
                     email = scan.next();
 
                     Vector<Card> cards = bank.getCardsOfAccount(email);
+                    if (cards == null) break;
+
                     for (var item: cards) {
                         System.out.println(item.toString() + '\n');
                     }
@@ -204,13 +206,13 @@ public class Main {
         String email = scan.next();
 
         Vector<Card> cards = bank.getCardsOfAccount(email);
-        for (var item: cards) {
-            System.out.println(item.toString() + '\n');
-        }
-
-        if (cards.size() == 0) {
+        if (cards == null || cards.size() == 0) {
             System.out.println("Account currently has no cards!");
             return null;
+        }
+
+        for (var item: cards) {
+            System.out.println(item.toString() + '\n');
         }
 
         int index_card = 0;

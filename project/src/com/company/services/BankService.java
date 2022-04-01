@@ -39,6 +39,10 @@ public class BankService {
 
     public void addCard(boolean is_credit, String account_email, double balance, double limit){
         Account account = this.getAccountByEmail(account_email);
+        if (account == null){
+            System.out.printf("There are no accounts with the %s email!%n", account_email);
+            return;
+        }
 
         Card card = null;
         if (is_credit)
