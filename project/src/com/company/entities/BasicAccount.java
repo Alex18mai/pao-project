@@ -4,8 +4,8 @@ public class BasicAccount extends Account{
     static double payback = 0.0; //basic accounts do not have a payback option on transactions
 
     //constructor
-    public BasicAccount(String first_name, String last_name, String email) {
-        super(first_name, last_name, email);
+    public BasicAccount(String firstName, String lastName, String email) {
+        super(firstName, lastName, email);
     }
 
     //getters
@@ -23,8 +23,8 @@ public class BasicAccount extends Account{
     @Override
     public String toString() {
         String str = "Basic Account:\n";
-        str += "First Name: " + this.first_name + '\n';
-        str += "Last Name: " + this.last_name + '\n';
+        str += "First Name: " + this.firstName + '\n';
+        str += "Last Name: " + this.lastName + '\n';
         str += "Email: " + this.email + '\n';
         str += "Payback: " + payback + '%' + '\n';
         str += "Total Balance: " + this.getTotalBalance() + '\n';

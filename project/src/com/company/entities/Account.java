@@ -1,41 +1,41 @@
 package com.company.entities;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public abstract class Account implements Comparable<Account>{
-    String first_name;
-    String last_name;
+    String firstName;
+    String lastName;
     String email;
 
-    Vector<Card> cards; //an account can have multiple cards
+    ArrayList<Card> cards; //an account can have multiple cards
     Savings savings; //an account can have savings
-    Vector<Transaction> transactions; //here we store all the transactions associated with the account
+    ArrayList<Transaction> transactions; //here we store all the transactions associated with the account
 
     //constructor
-    public Account(String first_name, String last_name, String email) {
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public Account(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
 
-        this.cards = new Vector<Card>();
+        this.cards = new ArrayList<>();
         this.savings = new Savings(this);
-        this.transactions = new Vector<Transaction>();
+        this.transactions = new ArrayList<>();
     }
 
     //getters
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return firstName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public Vector<Card> getCards() {
+    public ArrayList<Card> getCards() {
         return cards;
     }
 
@@ -43,24 +43,24 @@ public abstract class Account implements Comparable<Account>{
         return savings;
     }
 
-    public Vector<Transaction> getTransactions() {
+    public ArrayList<Transaction> getTransactions() {
         return transactions;
     }
 
     //setters
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setCards(Vector<Card> cards) {
+    public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
     }
 
@@ -68,7 +68,7 @@ public abstract class Account implements Comparable<Account>{
         this.savings = savings;
     }
 
-    public void setTransactions(Vector<Transaction> transactions) {
+    public void setTransactions(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
     }
 
@@ -80,7 +80,10 @@ public abstract class Account implements Comparable<Account>{
     }
 
     public void removeCard(Card card) {
-        this.cards.remove(card);
+        boolean cardRemoved = this.cards.remove(card);
+        if (!cardRemoved){
+            System.out.println("No card was removed (it does not exist in the account)!");
+        }
     }
 
     public void addTransaction(Transaction transaction) {
@@ -88,11 +91,11 @@ public abstract class Account implements Comparable<Account>{
     }
 
     protected double getTotalBalance(){
-        double total_balance = 0;
+        double totalBalance = 0;
         for (var item : cards) {
-            total_balance += item.getBalance();
+            totalBalance += item.getBalance();
         }
-        return total_balance;
+        return totalBalance;
     }
 
     //compare to

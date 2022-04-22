@@ -4,7 +4,7 @@ import com.company.entities.*;
 import com.company.services.BankService;
 
 import java.util.Scanner;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -47,24 +47,24 @@ public class Main {
             int option = scan.nextInt();
 
             //Do the action
-            String first_name, last_name, email;
+            String firstName, lastName, email;
             Card card;
             switch (option){
                 case 1:
                     System.out.print("Is the account premium?[y/n] ");
-                    String is_premium_string = scan.next();
-                    boolean is_premium = is_premium_string.equals("y");
+                    String isPremiumString = scan.next();
+                    boolean isPremium = isPremiumString.equals("y");
 
                     System.out.print("First Name: ");
-                    first_name = scan.next();
+                    firstName = scan.next();
 
                     System.out.print("Last Name: ");
-                    last_name = scan.next();
+                    lastName = scan.next();
 
                     System.out.print("Email: ");
                     email = scan.next();
 
-                    bank.addAccount(is_premium, first_name, last_name, email);
+                    bank.addAccount(isPremium, firstName, lastName, email);
                     break;
 
                 case 2:
@@ -76,7 +76,7 @@ public class Main {
                     break;
 
                 case 3:
-                    Vector<Account> accounts = bank.getAllAccountsSortedByBalance();
+                    ArrayList<Account> accounts = bank.getAllAccountsSortedByBalance();
                     for (var item: accounts) {
                         System.out.println(item.toString() + '\n');
                     }
@@ -87,12 +87,12 @@ public class Main {
                     email = scan.next();
 
                     System.out.print("New First Name: ");
-                    first_name = scan.next();
+                    firstName = scan.next();
 
                     System.out.print("New Last Name: ");
-                    last_name = scan.next();
+                    lastName = scan.next();
 
-                    bank.updateAccount(email, first_name, last_name);
+                    bank.updateAccount(email, firstName, lastName);
                     break;
 
                 case 5:
@@ -104,8 +104,8 @@ public class Main {
 
                 case 6:
                     System.out.print("Is this a credit card?[y/n] ");
-                    String is_credit_string = scan.next();
-                    boolean is_credit = is_credit_string.equals("y");
+                    String isCreditString = scan.next();
+                    boolean isCredit = isCreditString.equals("y");
 
                     System.out.print("The email of the account: ");
                     email = scan.next();
@@ -114,19 +114,19 @@ public class Main {
                     double balance = scan.nextDouble();
 
                     double limit = 0;
-                    if (is_credit){
+                    if (isCredit){
                         System.out.print("Limit: ");
                         limit = scan.nextDouble();
                     }
 
-                    bank.addCard(is_credit, email, balance, limit);
+                    bank.addCard(isCredit, email, balance, limit);
                     break;
 
                 case 7:
                     System.out.print("The email of the account: ");
                     email = scan.next();
 
-                    Vector<Card> cards = bank.getCardsOfAccount(email);
+                    ArrayList<Card> cards = bank.getCardsOfAccount(email);
                     if (cards == null) break;
 
                     for (var item: cards) {
@@ -139,9 +139,9 @@ public class Main {
                     if (card == null) break;
 
                     System.out.print("Amount of money added: ");
-                    int amount_added = scan.nextInt();
+                    int amountAdded = scan.nextInt();
 
-                    bank.addMoneyToCard(card, amount_added);
+                    bank.addMoneyToCard(card, amountAdded);
                     break;
 
                 case 9:
@@ -149,9 +149,9 @@ public class Main {
                     if (card == null) break;
 
                     System.out.print("Amount of money withdrawn: ");
-                    double amount_withdrawn = scan.nextInt();
+                    double amountWithdrawn = scan.nextInt();
 
-                    bank.withdrawMoneyFromCard(card, amount_withdrawn);
+                    bank.withdrawMoneyFromCard(card, amountWithdrawn);
                     break;
 
                 case 10:
@@ -166,29 +166,29 @@ public class Main {
                     email = scan.next();
 
                     System.out.print("Amount added to savings: ");
-                    double savings_amount = scan.nextDouble();
+                    double savingsAmount = scan.nextDouble();
 
-                    bank.addMoneyToSavings(email, savings_amount);
+                    bank.addMoneyToSavings(email, savingsAmount);
                     break;
 
                 case 12:
                     System.out.println("ACCOUNT WHICH PAYS THE AMOUNT:");
-                    Card card_paying = chooseCard(scan, bank);
-                    if (card_paying == null) break;
+                    Card cardPaying = chooseCard(scan, bank);
+                    if (cardPaying == null) break;
 
                     System.out.println("ACCOUNT WHICH RECEIVES THE AMOUNT:");
-                    Card card_receiving = chooseCard(scan, bank);
-                    if (card_receiving == null) break;
+                    Card cardReceiving = chooseCard(scan, bank);
+                    if (cardReceiving == null) break;
 
                     System.out.print("Amount payed: ");
                     double amount = scan.nextDouble();
 
-                    if (!card_paying.canPay(amount)){
+                    if (!cardPaying.canPay(amount)){
                         System.out.println("Not enough funds to pay!");
                         break;
                     }
 
-                    bank.makeTransaction(card_paying, card_receiving, amount);
+                    bank.makeTransaction(cardPaying, cardReceiving, amount);
                     break;
 
                 case 13:
@@ -205,7 +205,7 @@ public class Main {
         System.out.print("The email of the account: ");
         String email = scan.next();
 
-        Vector<Card> cards = bank.getCardsOfAccount(email);
+        ArrayList<Card> cards = bank.getCardsOfAccount(email);
         if (cards == null || cards.size() == 0) {
             System.out.println("Account currently has no cards!");
             return null;
@@ -215,12 +215,12 @@ public class Main {
             System.out.println(item.toString() + '\n');
         }
 
-        int index_card = 0;
+        int indexCard = 0;
         while (true){
             System.out.print("Write the index of the card you want to use [0/1/2...]: ");
-            index_card = scan.nextInt();
+            indexCard = scan.nextInt();
 
-            if (index_card < 0 || index_card >= cards.size()){
+            if (indexCard < 0 || indexCard >= cards.size()){
                 System.out.print("Wrong index!");
             }
             else{
@@ -228,6 +228,6 @@ public class Main {
             }
         }
 
-        return cards.get(index_card);
+        return cards.get(indexCard);
     }
 }

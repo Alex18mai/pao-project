@@ -7,7 +7,6 @@ public class Savings {
     //constructor
     public Savings(Account account) {
         this.account = account;
-        this.balance = 0;
     }
 
     //getters

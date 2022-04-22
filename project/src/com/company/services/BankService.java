@@ -4,12 +4,12 @@ import com.company.entities.*;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class BankService {
     static BankService instance = null;
     static String status = "Not created";
-    Vector<Account> accounts;
+    ArrayList<Account> accounts;
 
     //get instance
     public static BankService getInstance()
@@ -23,29 +23,29 @@ public class BankService {
 
     //constructor
     public BankService() {
-        this.accounts = new Vector<Account>();
+        this.accounts = new ArrayList<Account>();
     }
 
     //Create
-    public void addAccount(boolean is_premium, String first_name, String last_name, String email){
-        Account account = null;
-        if (is_premium)
-            account = new PremiumAccount(first_name, last_name, email);
+    public void addAccount(boolean isPremium, String firstName, String lastName, String email){
+        Account account;
+        if (isPremium)
+            account = new PremiumAccount(firstName, lastName, email);
         else
-            account = new BasicAccount(first_name, last_name, email);
+            account = new BasicAccount(firstName, lastName, email);
 
         this.accounts.add(account);
     }
 
-    public void addCard(boolean is_credit, String account_email, double balance, double limit){
-        Account account = this.getAccountByEmail(account_email);
+    public void addCard(boolean isCredit, String accountEmail, double balance, double limit){
+        Account account = this.getAccountByEmail(accountEmail);
         if (account == null){
-            System.out.printf("There are no accounts with the %s email!%n", account_email);
+            System.out.printf("There are no accounts with the %s email!%n", accountEmail);
             return;
         }
 
-        Card card = null;
-        if (is_credit)
+        Card card;
+        if (isCredit)
             card = new CreditCard(account, balance, limit);
         else
             card = new DebitCard(account, balance);
@@ -53,13 +53,13 @@ public class BankService {
         account.addCard(card);
     }
 
-    public void makeTransaction(Card card_paying, Card card_receiving, double amount){
-        Transaction transaction = new Transaction(card_paying.getAccount(), card_paying, card_receiving.getAccount(), card_receiving, amount);
-        card_paying.getAccount().addTransaction(transaction);
-        card_receiving.getAccount().addTransaction(transaction);
+    public void makeTransaction(Card cardPaying, Card cardReceiving, double amount){
+        Transaction transaction = new Transaction(cardPaying.getAccount(), cardPaying, cardReceiving.getAccount(), cardReceiving, amount);
+        cardPaying.getAccount().addTransaction(transaction);
+        cardReceiving.getAccount().addTransaction(transaction);
 
-        card_paying.pay(amount);
-        card_receiving.receive(amount);
+        cardPaying.pay(amount);
+        cardReceiving.receive(amount);
     }
 
     //Read
@@ -80,12 +80,12 @@ public class BankService {
         return account;
     }
 
-    public Vector<Account> getAllAccountsSortedByBalance(){
+    public ArrayList<Account> getAllAccountsSortedByBalance(){
         Collections.sort(this.accounts);
         return this.accounts;
     }
 
-    public Vector<Card> getCardsOfAccount(String email){
+    public ArrayList<Card> getCardsOfAccount(String email){
         Account account = getAccountByEmail(email);
 
         if (account == null) return null;
@@ -94,11 +94,11 @@ public class BankService {
     }
 
     //Update
-    public void updateAccount(String email, String new_first_name, String new_last_name){
+    public void updateAccount(String email, String newFirstName, String newLastName){
         Account account = this.getAccountByEmail(email);
         if (account == null) return;
-        account.setFirst_name(new_first_name);
-        account.setLast_name(new_last_name);
+        account.setFirstName(newFirstName);
+        account.setLastName(newLastName);
     }
 
     public void addMoneyToCard(Card card, double amount){

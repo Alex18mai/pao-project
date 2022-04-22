@@ -4,8 +4,8 @@ public class PremiumAccount extends Account{
     static double payback = 1.5; //premium accounts have a 1.5% payback
 
     //constructor
-    public PremiumAccount(String first_name, String last_name, String email) {
-        super(first_name, last_name, email);
+    public PremiumAccount(String firstName, String lastName, String email) {
+        super(firstName, lastName, email);
     }
 
     //getters
@@ -22,8 +22,8 @@ public class PremiumAccount extends Account{
     @Override
     public String toString() {
         String str = "Premium Account:\n";
-        str += "First Name: " + this.first_name + '\n';
-        str += "Last Name: " + this.last_name + '\n';
+        str += "First Name: " + this.firstName + '\n';
+        str += "Last Name: " + this.lastName + '\n';
         str += "Email: " + this.email + '\n';
         str += "Payback: " + payback + '%' + '\n';
         str += "Total Balance: " + this.getTotalBalance() + '\n';

@@ -1,38 +1,38 @@
 package com.company.entities;
 
 public class Transaction {
-    Account from_account;
-    Card from_card;
+    Account fromAccount;
+    Card fromCard;
 
-    Account to_account;
-    Card to_card;
+    Account toAccount;
+    Card toCard;
 
     double amount;
 
     //constructor
-    public Transaction(Account from_account, Card from_card, Account to_account, Card to_card, double amount) {
-        this.from_account = from_account;
-        this.from_card = from_card;
-        this.to_account = to_account;
-        this.to_card = to_card;
+    public Transaction(Account fromAccount, Card fromCard, Account toAccount, Card toCard, double amount) {
+        this.fromAccount = fromAccount;
+        this.fromCard = fromCard;
+        this.toAccount = toAccount;
+        this.toCard = toCard;
         this.amount = amount;
     }
 
     //getters
-    public Account getFrom_account() {
-        return from_account;
+    public Account getFromAccount() {
+        return fromAccount;
     }
 
-    public Card getFrom_card() {
-        return from_card;
+    public Card getFromCard() {
+        return fromCard;
     }
 
-    public Account getTo_account() {
-        return to_account;
+    public Account getToAccount() {
+        return toAccount;
     }
 
-    public Card getTo_card() {
-        return to_card;
+    public Card getToCard() {
+        return toCard;
     }
 
     public double getAmount() {
@@ -40,20 +40,20 @@ public class Transaction {
     }
 
     //setters
-    public void setFrom_account(Account from_account) {
-        this.from_account = from_account;
+    public void setFromAccount(Account fromAccount) {
+        this.fromAccount = fromAccount;
     }
 
-    public void setFrom_card(Card from_card) {
-        this.from_card = from_card;
+    public void setFromCard(Card fromCard) {
+        this.fromCard = fromCard;
     }
 
-    public void setTo_account(Account to_account) {
-        this.to_account = to_account;
+    public void setToAccount(Account toAccount) {
+        this.toAccount = toAccount;
     }
 
-    public void setTo_card(Card to_card) {
-        this.to_card = to_card;
+    public void setToCard(Card toCard) {
+        this.toCard = toCard;
     }
 
     public void setAmount(double amount) {
