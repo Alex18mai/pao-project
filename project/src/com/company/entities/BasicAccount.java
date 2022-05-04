@@ -3,7 +3,9 @@ package com.company.entities;
 public class BasicAccount extends Account{
     static double payback = 0.0; //basic accounts do not have a payback option on transactions
 
-    //constructor
+    //constructors
+    public BasicAccount() { super(); }
+
     public BasicAccount(String firstName, String lastName, String email) {
         super(firstName, lastName, email);
     }

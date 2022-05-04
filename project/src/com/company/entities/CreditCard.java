@@ -3,7 +3,9 @@ package com.company.entities;
 public class CreditCard extends Card{
     double limit; //the balance can be negative until reaching negative limit
 
-    //constructor
+    //constructors
+    public CreditCard() { super(); }
+
     public CreditCard(Account account, double balance, double limit) {
         super(account, balance);
         this.limit = limit;

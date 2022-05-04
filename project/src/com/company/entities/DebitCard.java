@@ -2,7 +2,9 @@ package com.company.entities;
 
 public class DebitCard extends Card{
 
-    //constructor
+    //constructors
+    public DebitCard() { super(); }
+
     public DebitCard(Account account, double balance) {
         super(account, balance);
     }

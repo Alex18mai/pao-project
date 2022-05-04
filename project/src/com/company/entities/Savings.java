@@ -4,9 +4,16 @@ public class Savings {
     Account account;
     double balance;
 
-    //constructor
+    //constructors
+    public Savings() { }
+
     public Savings(Account account) {
         this.account = account;
+    }
+
+    public Savings(Account account, double balance) {
+        this.account = account;
+        this.balance = balance;
     }
 
     //getters
