@@ -12,8 +12,23 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CSVService {
+    static CSVService instance = null;
+    static String status = "Not created";
 
-    private static Object parseObject (Class type, String value) {
+    //get instance
+    public static CSVService getInstance()
+    {
+        if (instance == null) {
+            status = "Created";
+            instance = new CSVService();
+        }
+        return instance;
+    }
+
+    //constructor
+    private CSVService() { }
+
+    private Object parseObject (Class type, String value) {
         if (type == String.class)
             return value;
         if (type == boolean.class)
@@ -30,7 +45,7 @@ public class CSVService {
     }
 
 
-    public static <T> List<T> read (String fileName, Class<T> classToRead) {
+    public <T> List<T> read (String fileName, Class<T> classToRead) {
         try {
             // Declare variables
             BufferedReader fileBuffer = new BufferedReader(new FileReader(fileName));
@@ -94,7 +109,7 @@ public class CSVService {
     }
 
 
-    private static void writeRow (List row, FileWriter file) {
+    private void writeRow (List row, FileWriter file) {
         try{
             for (int i=0; i < row.size(); i++)
             {
@@ -112,7 +127,7 @@ public class CSVService {
     }
 
 
-    public static <T> void write (List<T> objects, String fileName, Class<T> classToWrite) {
+    public <T> void write (List<T> objects, String fileName, Class<T> classToWrite) {
         // Create file (if it does not exist)
         try {
             new File(fileName).createNewFile();

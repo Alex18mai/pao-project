@@ -13,33 +13,37 @@ public class AccountService {
     static AccountService instance = null;
     static String status = "Not created";
 
+    CSVService csvService;
+
     //get instance
-    public static AccountService getInstance()
+    public static AccountService getInstance(CSVService csvService)
     {
         if (instance == null) {
             status = "Created";
-            instance = new AccountService();
+            instance = new AccountService(csvService);
         }
         return instance;
     }
 
     //constructor
-    private AccountService() { }
+    private AccountService(CSVService csvService) {
+        this.csvService = csvService;
+    }
 
     public List<Account> readAccountsFromCSV() {
 
         List <Account> accounts = new ArrayList<>();
 
         // Get Basic and Premium Accounts
-        List <BasicAccount> basicAccounts = CSVService.read("src/com/company/data/basicAccount.csv", BasicAccount.class);
-        List <PremiumAccount> premiumAccounts = CSVService.read("src/com/company/data/premiumAccount.csv", PremiumAccount.class);
+        List <BasicAccount> basicAccounts = csvService.read("src/com/company/data/basicAccount.csv", BasicAccount.class);
+        List <PremiumAccount> premiumAccounts = csvService.read("src/com/company/data/premiumAccount.csv", PremiumAccount.class);
 
         // Get Credit and Debit Cards (we use models in order to retrieve the FK and map it to accounts)
-        List <CreditCardModel> creditCardModels = CSVService.read("src/com/company/data/creditCardModel.csv", CreditCardModel.class);
-        List <DebitCardModel> debitCardModels = CSVService.read("src/com/company/data/debitCardModel.csv", DebitCardModel.class);
+        List <CreditCardModel> creditCardModels = csvService.read("src/com/company/data/creditCardModel.csv", CreditCardModel.class);
+        List <DebitCardModel> debitCardModels = csvService.read("src/com/company/data/debitCardModel.csv", DebitCardModel.class);
 
         // Get Savings (we use models in order to retrieve the FK and map it to accounts)
-        List <SavingsModel> savingsModels = CSVService.read("src/com/company/data/savingsModel.csv", SavingsModel.class);
+        List <SavingsModel> savingsModels = csvService.read("src/com/company/data/savingsModel.csv", SavingsModel.class);
 
         accounts.addAll(basicAccounts);
         accounts.addAll(premiumAccounts);
@@ -140,13 +144,13 @@ public class AccountService {
         }
 
         // Write data to CSV
-        CSVService.write(basicAccounts,"src/com/company/data/basicAccount.csv", BasicAccount.class);
-        CSVService.write(premiumAccounts,"src/com/company/data/premiumAccount.csv", PremiumAccount.class);
+        csvService.write(basicAccounts,"src/com/company/data/basicAccount.csv", BasicAccount.class);
+        csvService.write(premiumAccounts,"src/com/company/data/premiumAccount.csv", PremiumAccount.class);
 
-        CSVService.write(creditCardModels,"src/com/company/data/creditCardModel.csv", CreditCardModel.class);
-        CSVService.write(debitCardModels,"src/com/company/data/debitCardModel.csv", DebitCardModel.class);
+        csvService.write(creditCardModels,"src/com/company/data/creditCardModel.csv", CreditCardModel.class);
+        csvService.write(debitCardModels,"src/com/company/data/debitCardModel.csv", DebitCardModel.class);
 
-        CSVService.write(savingsModels,"src/com/company/data/savingsModel.csv", SavingsModel.class);
+        csvService.write(savingsModels,"src/com/company/data/savingsModel.csv", SavingsModel.class);
 
     }
 

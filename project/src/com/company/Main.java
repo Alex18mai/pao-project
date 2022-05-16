@@ -4,6 +4,7 @@ import com.company.entities.*;
 import com.company.services.AccountService;
 import com.company.services.AuditService;
 import com.company.services.BankService;
+import com.company.services.CSVService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -14,7 +15,8 @@ public class Main {
     public static void main(String[] args) {
 
         BankService bank = BankService.getInstance();
-        AccountService accountService = AccountService.getInstance();
+        CSVService csvService = CSVService.getInstance();
+        AccountService accountService = AccountService.getInstance(csvService);
         AuditService auditService = AuditService.getInstance();
 
         Scanner scan = new Scanner(System.in);
