@@ -1,6 +1,12 @@
 package com.company;
 
 import com.company.entities.*;
+import com.company.models.CreditCardModel;
+import com.company.models.DebitCardModel;
+import com.company.repositories.BasicAccountRepository;
+import com.company.repositories.CreditAccountRepository;
+import com.company.repositories.DebitCardRepository;
+import com.company.repositories.PremiumAccountRepository;
 import com.company.services.AccountService;
 import com.company.services.AuditService;
 import com.company.services.BankService;
@@ -19,6 +25,11 @@ public class Main {
         AccountService accountService = AccountService.getInstance(csvService);
         AuditService auditService = AuditService.getInstance();
 
+        BasicAccountRepository basicAccountRepository = BasicAccountRepository.getInstance();
+        PremiumAccountRepository premiumAccountRepository = PremiumAccountRepository.getInstance();
+        DebitCardRepository debitCardRepository = DebitCardRepository.getInstance();
+        CreditAccountRepository creditAccountRepository = CreditAccountRepository.getInstance();
+
         Scanner scan = new Scanner(System.in);
 
         // Load accounts from CSV
@@ -34,7 +45,8 @@ public class Main {
             //Account stuff
             System.out.println("1  - Create an account.");
             System.out.println("2  - Search an account by email.");
-            System.out.println("3  - List all accounts in the bank sorted by balance.");
+            //System.out.println("3  - List all accounts in the bank sorted by balance.");
+            System.out.println("3  - List all accounts in the bank.");
             System.out.println("4  - Update details of an account.");
             System.out.println("5  - Delete an account.");
 
@@ -60,12 +72,14 @@ public class Main {
 
             //Do the action
             String firstName, lastName, email;
+            Account account;
+            boolean isPremium;
             Card card;
             switch (option){
                 case 1:
                     System.out.print("Is the account premium?[y/n] ");
                     String isPremiumString = scan.next();
-                    boolean isPremium = isPremiumString.equals("y");
+                    isPremium = isPremiumString.equals("y");
 
                     System.out.print("First Name: ");
                     firstName = scan.next();
@@ -75,6 +89,14 @@ public class Main {
 
                     System.out.print("Email: ");
                     email = scan.next();
+
+                    // DATABASE - CREATE
+                    if (isPremium){
+                        premiumAccountRepository.insertPremiumAccount(new PremiumAccount(firstName, lastName, email));
+                    }
+                    else {
+                        basicAccountRepository.insertBasicAccount(new BasicAccount(firstName, lastName, email));
+                    }
 
                     bank.addAccount(isPremium, firstName, lastName, email);
 
@@ -89,7 +111,14 @@ public class Main {
                     System.out.print("Email: ");
                     email = scan.next();
 
-                    Account account = bank.getAccountByEmail(email);
+                    //Account account = bank.getAccountByEmail(email);
+
+                    // DATABASE - READ
+                    account = premiumAccountRepository.getPremiumAccountByEmail(email);
+                    if (account == null){
+                        account = basicAccountRepository.getBasicAccountByEmail(email);
+                    }
+
                     System.out.println(account.toString());
 
                     auditService.audit(String.format("Account searched by email : %s.", email));
@@ -100,6 +129,10 @@ public class Main {
                     for (var item: accounts) {
                         System.out.println(item.toString() + '\n');
                     }
+
+                    // DATABASE - READ
+                    premiumAccountRepository.displayPremiumAccounts();
+                    basicAccountRepository.displayBasicAccounts();
 
                     auditService.audit("All accounts listed.");
                     break;
@@ -114,6 +147,21 @@ public class Main {
                     System.out.print("New Last Name: ");
                     lastName = scan.next();
 
+                    // DATABASE - READ (see if premium)
+                    isPremium = false;
+                    account = premiumAccountRepository.getPremiumAccountByEmail(email);
+                    if (account != null){
+                        isPremium = true;
+                    }
+
+                    // DATABASE - UPDATE
+                    if (isPremium){
+                        premiumAccountRepository.updatePremiumAccountName(firstName, lastName, email);
+                    }
+                    else{
+                        basicAccountRepository.updateBasicAccountName(firstName, lastName, email);
+                    }
+
                     bank.updateAccount(email, firstName, lastName);
 
                     auditService.audit(String.format("Account updated : %s.", email));
@@ -126,6 +174,21 @@ public class Main {
                 case 5:
                     System.out.print("The email of the account: ");
                     email = scan.next();
+
+                    // DATABASE - READ (see if premium)
+                    isPremium = false;
+                    account = premiumAccountRepository.getPremiumAccountByEmail(email);
+                    if (account != null){
+                        isPremium = true;
+                    }
+
+                    // DATABASE - DELETE
+                    if (isPremium){
+                        premiumAccountRepository.deletePremiumAccount(email);
+                    }
+                    else{
+                        basicAccountRepository.deleteBasicAccount(email);
+                    }
 
                     bank.deleteAccount(email);
                     auditService.audit(String.format("Account deleted : %s.", email));
@@ -150,6 +213,14 @@ public class Main {
                     if (isCredit){
                         System.out.print("Limit: ");
                         limit = scan.nextDouble();
+                    }
+
+                    // DATABASE - CREATE
+                    if (isCredit){
+                        creditAccountRepository.insertCreditCard(new CreditCardModel(email, balance, limit));
+                    }
+                    else{
+                        debitCardRepository.insertDebitCard(new DebitCardModel(email, balance));
                     }
 
                     bank.addCard(isCredit, email, balance, limit);
