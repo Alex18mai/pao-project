@@ -4,7 +4,9 @@ public abstract class Card {
     Account account;
     double balance;
 
-    //constructor
+    //constructors
+    public Card() { }
+
     public Card(Account account, double balance) {
         this.account = account;
         this.balance = balance;

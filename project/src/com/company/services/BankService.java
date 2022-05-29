@@ -3,13 +3,14 @@ package com.company.services;
 import com.company.entities.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.ArrayList;
 
 public class BankService {
     static BankService instance = null;
     static String status = "Not created";
-    ArrayList<Account> accounts;
+    List<Account> accounts;
 
     //get instance
     public static BankService getInstance()
@@ -22,8 +23,13 @@ public class BankService {
     }
 
     //constructor
-    public BankService() {
+    private BankService() {
         this.accounts = new ArrayList<Account>();
+    }
+
+    //setter
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 
     //Create
@@ -80,12 +86,12 @@ public class BankService {
         return account;
     }
 
-    public ArrayList<Account> getAllAccountsSortedByBalance(){
+    public List<Account> getAllAccountsSortedByBalance(){
         Collections.sort(this.accounts);
         return this.accounts;
     }
 
-    public ArrayList<Card> getCardsOfAccount(String email){
+    public List<Card> getCardsOfAccount(String email){
         Account account = getAccountByEmail(email);
 
         if (account == null) return null;
@@ -109,9 +115,12 @@ public class BankService {
         card.pay(amount);
     }
 
-    public void addMoneyToSavings(String email, double amount){
+    public void addMoneyToSavings(String email, double amount) throws Exception{
         Account account = this.getAccountByEmail(email);
-        if (account == null) return;
+        if (account == null)
+            throw new Exception("Acest cont nu exista!");
+        if (amount < 0)
+            throw new Exception("In savings se poate adauga doar o suma pozitiva!");
         account.getSavings().addSavings(amount);
     }
 

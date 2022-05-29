@@ -1,8 +1,12 @@
 package com.company;
 
 import com.company.entities.*;
+import com.company.services.AccountService;
+import com.company.services.AuditService;
 import com.company.services.BankService;
+import com.company.services.CSVService;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -11,7 +15,15 @@ public class Main {
     public static void main(String[] args) {
 
         BankService bank = BankService.getInstance();
+        CSVService csvService = CSVService.getInstance();
+        AccountService accountService = AccountService.getInstance(csvService);
+        AuditService auditService = AuditService.getInstance();
+
         Scanner scan = new Scanner(System.in);
+
+        // Load accounts from CSV
+        bank.setAccounts(accountService.readAccountsFromCSV());
+        auditService.audit("Data loaded from CSV.");
 
         while (true){
 
@@ -65,6 +77,12 @@ public class Main {
                     email = scan.next();
 
                     bank.addAccount(isPremium, firstName, lastName, email);
+
+                    auditService.audit(String.format("Account added : %s.", email));
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 2:
@@ -73,13 +91,17 @@ public class Main {
 
                     Account account = bank.getAccountByEmail(email);
                     System.out.println(account.toString());
+
+                    auditService.audit(String.format("Account searched by email : %s.", email));
                     break;
 
                 case 3:
-                    ArrayList<Account> accounts = bank.getAllAccountsSortedByBalance();
+                    List<Account> accounts = bank.getAllAccountsSortedByBalance();
                     for (var item: accounts) {
                         System.out.println(item.toString() + '\n');
                     }
+
+                    auditService.audit("All accounts listed.");
                     break;
 
                 case 4:
@@ -93,6 +115,12 @@ public class Main {
                     lastName = scan.next();
 
                     bank.updateAccount(email, firstName, lastName);
+
+                    auditService.audit(String.format("Account updated : %s.", email));
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 5:
@@ -100,6 +128,11 @@ public class Main {
                     email = scan.next();
 
                     bank.deleteAccount(email);
+                    auditService.audit(String.format("Account deleted : %s.", email));
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 6:
@@ -120,18 +153,25 @@ public class Main {
                     }
 
                     bank.addCard(isCredit, email, balance, limit);
+                    auditService.audit(String.format("Card created with balance %f for account %s.", balance, email));
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 7:
                     System.out.print("The email of the account: ");
                     email = scan.next();
 
-                    ArrayList<Card> cards = bank.getCardsOfAccount(email);
+                    List<Card> cards = bank.getCardsOfAccount(email);
                     if (cards == null) break;
 
                     for (var item: cards) {
                         System.out.println(item.toString() + '\n');
                     }
+
+                    auditService.audit(String.format("All cards listed for account %s.", email));
                     break;
 
                 case 8:
@@ -142,6 +182,11 @@ public class Main {
                     int amountAdded = scan.nextInt();
 
                     bank.addMoneyToCard(card, amountAdded);
+                    auditService.audit(String.format("Money added to card : %d.", amountAdded));
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 9:
@@ -152,6 +197,11 @@ public class Main {
                     double amountWithdrawn = scan.nextInt();
 
                     bank.withdrawMoneyFromCard(card, amountWithdrawn);
+                    auditService.audit(String.format("Money withdrawn from card : %f.", amountWithdrawn));
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 10:
@@ -159,6 +209,11 @@ public class Main {
                     if (card == null) break;
 
                     bank.deleteCard(card);
+                    auditService.audit("Card deleted.");
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 11:
@@ -168,7 +223,18 @@ public class Main {
                     System.out.print("Amount added to savings: ");
                     double savingsAmount = scan.nextDouble();
 
-                    bank.addMoneyToSavings(email, savingsAmount);
+                    try{
+                        bank.addMoneyToSavings(email, savingsAmount);
+                    }
+                    catch (Exception e){
+                        System.out.printf("Error occurred while adding money to savings : %s %n", e.getMessage());
+                    }
+
+                    auditService.audit(String.format("Money added to savings (%f) in account %s.", savingsAmount, email));
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 12:
@@ -189,9 +255,19 @@ public class Main {
                     }
 
                     bank.makeTransaction(cardPaying, cardReceiving, amount);
+                    auditService.audit(String.format("Transaction made : %s -> %s (amount = %f).",cardPaying.getAccount().getEmail() ,cardReceiving.getAccount().getEmail(), amount));
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
                     break;
 
                 case 13:
+
+                    // Save accounts to CSV
+                    accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
+                    auditService.audit("Data saved to CSV.");
+
                     System.out.println("Bye bye! :)");
                     return;
                 default:
@@ -205,7 +281,7 @@ public class Main {
         System.out.print("The email of the account: ");
         String email = scan.next();
 
-        ArrayList<Card> cards = bank.getCardsOfAccount(email);
+        List<Card> cards = bank.getCardsOfAccount(email);
         if (cards == null || cards.size() == 0) {
             System.out.println("Account currently has no cards!");
             return null;

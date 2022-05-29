@@ -3,7 +3,9 @@ package com.company.entities;
 public class PremiumAccount extends Account{
     static double payback = 1.5; //premium accounts have a 1.5% payback
 
-    //constructor
+    //constructors
+    public PremiumAccount() { super(); }
+
     public PremiumAccount(String firstName, String lastName, String email) {
         super(firstName, lastName, email);
     }

@@ -9,7 +9,9 @@ public class Transaction {
 
     double amount;
 
-    //constructor
+    //constructors
+    public Transaction() { }
+
     public Transaction(Account fromAccount, Card fromCard, Account toAccount, Card toCard, double amount) {
         this.fromAccount = fromAccount;
         this.fromCard = fromCard;

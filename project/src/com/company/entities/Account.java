@@ -1,17 +1,24 @@
 package com.company.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Account implements Comparable<Account>{
     String firstName;
     String lastName;
     String email;
 
-    ArrayList<Card> cards; //an account can have multiple cards
+    List<Card> cards; //an account can have multiple cards
     Savings savings; //an account can have savings
-    ArrayList<Transaction> transactions; //here we store all the transactions associated with the account
+    List<Transaction> transactions; //here we store all the transactions associated with the account
 
-    //constructor
+    //constructors
+    public Account() {
+        this.cards = new ArrayList<>();
+        this.savings = new Savings(this);
+        this.transactions = new ArrayList<>();
+    }
+
     public Account(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,7 +42,7 @@ public abstract class Account implements Comparable<Account>{
         return email;
     }
 
-    public ArrayList<Card> getCards() {
+    public List<Card> getCards() {
         return cards;
     }
 
@@ -43,7 +50,7 @@ public abstract class Account implements Comparable<Account>{
         return savings;
     }
 
-    public ArrayList<Transaction> getTransactions() {
+    public List<Transaction> getTransactions() {
         return transactions;
     }
 
@@ -60,7 +67,7 @@ public abstract class Account implements Comparable<Account>{
         this.email = email;
     }
 
-    public void setCards(ArrayList<Card> cards) {
+    public void setCards(List<Card> cards) {
         this.cards = cards;
     }
 
@@ -68,7 +75,7 @@ public abstract class Account implements Comparable<Account>{
         this.savings = savings;
     }
 
-    public void setTransactions(ArrayList<Transaction> transactions) {
+    public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 
