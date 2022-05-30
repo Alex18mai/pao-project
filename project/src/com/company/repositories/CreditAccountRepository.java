@@ -112,6 +112,28 @@ public class CreditAccountRepository {
         }
     }
 
+    public void displayCreditCards(String accountEmail) {
+        String selectSql = "SELECT * FROM credit_card where accountEmail = ?";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) { //try with resources
+            preparedStatement.setString(1, accountEmail);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("Credit Card:");
+                System.out.println("Account Email: " + resultSet.getString(2));
+                System.out.println("Balance: " + resultSet.getDouble(3));
+                System.out.println("Limit: " + resultSet.getDouble(4));
+                System.out.println();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteCreditCard (String accountEmail) {
         String deleteSql = "DELETE FROM credit_card WHERE accountEmail = ?";
 

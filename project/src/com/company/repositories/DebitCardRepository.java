@@ -109,6 +109,27 @@ public class DebitCardRepository {
         }
     }
 
+    public void displayDebitCards(String accountEmail) {
+        String selectSql = "SELECT * FROM debit_card where accountEmail = ?";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) { //try with resources
+            preparedStatement.setString(1, accountEmail);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("Debit Card:");
+                System.out.println("Account Email: " + resultSet.getString(2));
+                System.out.println("Balance: " + resultSet.getDouble(3));
+                System.out.println();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteDebitCard (String accountEmail) {
         String deleteSql = "DELETE FROM debit_card WHERE accountEmail = ?";
 

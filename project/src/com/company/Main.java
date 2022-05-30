@@ -125,10 +125,12 @@ public class Main {
                     break;
 
                 case 3:
+                    /*
                     List<Account> accounts = bank.getAllAccountsSortedByBalance();
                     for (var item: accounts) {
                         System.out.println(item.toString() + '\n');
                     }
+                    */
 
                     // DATABASE - READ
                     premiumAccountRepository.displayPremiumAccounts();
@@ -235,12 +237,18 @@ public class Main {
                     System.out.print("The email of the account: ");
                     email = scan.next();
 
+                    // DATABASE - READ
+                    debitCardRepository.displayDebitCards(email);
+                    creditAccountRepository.displayCreditCards(email);
+
+                    /*
                     List<Card> cards = bank.getCardsOfAccount(email);
                     if (cards == null) break;
 
                     for (var item: cards) {
                         System.out.println(item.toString() + '\n');
                     }
+                    */
 
                     auditService.audit(String.format("All cards listed for account %s.", email));
                     break;
@@ -254,6 +262,14 @@ public class Main {
 
                     bank.addMoneyToCard(card, amountAdded);
                     auditService.audit(String.format("Money added to card : %d.", amountAdded));
+
+                    // DATABASE - UPDATE
+                    if (card instanceof CreditCard){
+                        creditAccountRepository.updateCreditCardBalance(card.getBalance(), card.getAccount().getEmail());
+                    }
+                    else if (card instanceof DebitCard){
+                        debitCardRepository.updateDebitCardBalance(card.getBalance(), card.getAccount().getEmail());
+                    }
 
                     // Save accounts to CSV
                     accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
@@ -270,6 +286,14 @@ public class Main {
                     bank.withdrawMoneyFromCard(card, amountWithdrawn);
                     auditService.audit(String.format("Money withdrawn from card : %f.", amountWithdrawn));
 
+                    // DATABASE - UPDATE
+                    if (card instanceof CreditCard){
+                        creditAccountRepository.updateCreditCardBalance(card.getBalance(), card.getAccount().getEmail());
+                    }
+                    else if (card instanceof DebitCard){
+                        debitCardRepository.updateDebitCardBalance(card.getBalance(), card.getAccount().getEmail());
+                    }
+
                     // Save accounts to CSV
                     accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
                     auditService.audit("Data saved to CSV.");
@@ -278,6 +302,14 @@ public class Main {
                 case 10:
                     card = chooseCard(scan, bank);
                     if (card == null) break;
+
+                    // DATABASE - DELETE
+                    if (card instanceof CreditCard){
+                        creditAccountRepository.deleteCreditCard(card.getAccount().getEmail());
+                    }
+                    else if (card instanceof DebitCard){
+                        debitCardRepository.deleteDebitCard(card.getAccount().getEmail());
+                    }
 
                     bank.deleteCard(card);
                     auditService.audit("Card deleted.");
