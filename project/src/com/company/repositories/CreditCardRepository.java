@@ -1,28 +1,27 @@
 package com.company.repositories;
 
 import com.company.config.DatabaseConfiguration;
-import com.company.entities.CreditCard;
 import com.company.models.CreditCardModel;
 
 import java.sql.*;
 
-public class CreditAccountRepository {
-    static CreditAccountRepository instance = null;
+public class CreditCardRepository {
+    static CreditCardRepository instance = null;
     static String status = "Not created";
 
     //get instance
-    public static CreditAccountRepository getInstance()
+    public static CreditCardRepository getInstance()
     {
         if (instance == null) {
             status = "Created";
-            instance = new CreditAccountRepository();
+            instance = new CreditCardRepository();
             instance.createTable();
         }
         return instance;
     }
 
     //constructor
-    private CreditAccountRepository() { }
+    private CreditCardRepository() { }
 
     public void createTable() {
         String createTableSql = "CREATE TABLE IF NOT EXISTS credit_card" +

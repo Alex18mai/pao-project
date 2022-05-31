@@ -1,10 +1,11 @@
 package com.company;
 
+import com.company.config.DatabaseConfiguration;
 import com.company.entities.*;
 import com.company.models.CreditCardModel;
 import com.company.models.DebitCardModel;
 import com.company.repositories.BasicAccountRepository;
-import com.company.repositories.CreditAccountRepository;
+import com.company.repositories.CreditCardRepository;
 import com.company.repositories.DebitCardRepository;
 import com.company.repositories.PremiumAccountRepository;
 import com.company.services.AccountService;
@@ -14,7 +15,6 @@ import com.company.services.CSVService;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Main {
 
@@ -28,7 +28,7 @@ public class Main {
         BasicAccountRepository basicAccountRepository = BasicAccountRepository.getInstance();
         PremiumAccountRepository premiumAccountRepository = PremiumAccountRepository.getInstance();
         DebitCardRepository debitCardRepository = DebitCardRepository.getInstance();
-        CreditAccountRepository creditAccountRepository = CreditAccountRepository.getInstance();
+        CreditCardRepository creditAccountRepository = CreditCardRepository.getInstance();
 
         Scanner scan = new Scanner(System.in);
 
@@ -365,7 +365,10 @@ public class Main {
                     auditService.audit("Data saved to CSV.");
                     break;
 
+
                 case 13:
+
+                    DatabaseConfiguration.closeDatabaseConnection();
 
                     // Save accounts to CSV
                     accountService.writeAccountsToCSV(bank.getAllAccountsSortedByBalance());
